@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="align-items-center my-2" style="margin:auto; border:1px solid black; width:300px;">
+    <form class="my-3" method="POST" action="{{url_for('registration')}}">
+        <div class="form-group">
+            <input type="text" class="form-control" name= "athleteFname" placeholder="Athlete First Name" required>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="athleteSname" placeholder="Athlete SurName" required>
+        </div>
+
+        <legend class="col-form-label">
+            <strong>Select Athlete Gender</strong>
+        </legend>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" id="maleGender" name="athleteGender" value="male" checked>
+            <label class="form-check-label" for="maleGender">
+                Male
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="athleteGender" id="femaleGender" value="female">
+            <label class="form-check-label" for="winterSport">
+                Female
+            </label>
+        </div>
+
+        <div class="form-group">
+            <input type="number" class="form-control" name="athleteAge" placeholder="Athlete Age" min="18" max="60" required>
+        </div>
+        <div class="form-group">
+            <input type="email" class="form-control" name="athleteEmail" aria-describedby="emailHelp" placeholder="Enter email" required>
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        
+        <div class="form-group">
+            <select name="athleteCountry" class="form-control">
+                <option selected>Select athletes Country...</option>
+                <option value="CAN">Canada</option>
+                <option value="NGA">Nigeria</option>
+                <option value="LND">London</option>
+                <option value="ARG">Argentina</option>
+                <option value="BOS">Botswana</option>
+                <option value="GER">Germany</option>
+                <option value="AUR">Australia</option>
+                <option value="EGY">Egypt</option>
+                <option value="JMC">Jamaica</option>
+                <option value="DMK">Denmark</option>
+                <option value="MRC">Morroco</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <input type="text" class="form-control" name="athleteId" placeholder="Athlete Id number" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+{% endblock %}
+
+
