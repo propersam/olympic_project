@@ -40,6 +40,6 @@ class RegisterStadiumForm(FlaskForm):
     register_stadium = SubmitField('Register')
 
 class RegisterSporteventForm(FlaskForm):
-    sport = StringField('Sport Category', validators=[DataRequired()])
-    event = StringField('Sport Event', validators=[DataRequired()])
-    register_sport = StringField('Register')
+    sport = StringField('Category', validators=[DataRequired()])
+    event = StringField('Event', validators=[DataRequired()])
+    register_sport = SubmitField('Register')

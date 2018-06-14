@@ -8,7 +8,7 @@ from app.forms import LoginForm, RegisterAthleteForm, RegisterCountryForm
 from app.forms import RegisterStadiumForm, RegisterSporteventForm
 from app.models import Admin, Athlete, Country, Stadium
 from app.models import SportEvent, StadiumSportEvent, AthleteSportEvent
-from app.models import OlympicYear
+# from app.models import OlympicYear
 
 
 
