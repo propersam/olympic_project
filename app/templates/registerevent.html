@@ -1,0 +1,28 @@
+{% extends "admindashboard.html" %}
+
+{% block content %}
+
+    <h3> Stadium Registeration Form </h3>
+    <form method="post" action="" novalidate>
+
+
+        <div class="form-group row">
+            {{ form.stadium_name.label(class="col-md-3 col-form-label") }}
+            {{ form.stadium_name(size=50,placeholder="Enter Name of Country", class="col-md-9 form-control") }}
+            <br>{% for error in form.stadium_name.errors %}
+            <span style="color: red;"> [{{ error }}]</span>
+            {% endfor %}
+        </div>
+
+
+
+
+
+
+        <div>
+          {{ form.register_stadium(class="btn btn-primary") }}
+        </div>
+    </form>
+
+
+{% endblock %}

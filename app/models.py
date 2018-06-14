@@ -16,7 +16,6 @@ class Athlete(db.Model):
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
     # athlete_picture_url = db.Column(db.String(50))
     athlete_sport_event = db.relationship('AthleteSportEvent', backref='athlete_sport_event', lazy='dynamic')
-    result = db.relationship('Result', backref='result', lazy='dynamic')
 
 
 class Country(db.Model):
@@ -35,6 +34,7 @@ class Country(db.Model):
 class SportEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sport_event = db.Column(db.String(30), index=True)
+    sport_category = db.Column(db.String(30), index=True)
     #athlete_sport_event = db.relationship('AthleteSportEvent', backref='athlete_sport_event', lazy='dynamic')
     stadium_sport_event = db.relationship('StadiumSportEvent', backref='stadium_sport_event', lazy='dynamic')
 
@@ -51,18 +51,13 @@ class AthleteSportEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     athlete_id = db.Column(db.Integer, db.ForeignKey('athlete.id'))
     sport_event_id = db.Column(db.Integer,db.ForeignKey('sport_event.id'))
-
+    Date = db.Column(db.DateTime, index=True)
+    Position = db.Column(db.Integer)
 
 class StadiumSportEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stadium_id = db.Column(db.Integer, db.ForeignKey('stadium.id'))
     sport_event_id = db.Column(db.Integer, db.ForeignKey('sport_event.id'))
-
-
-class Result(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    athlete_id = db.Column(db.Integer, db.ForeignKey('athlete.id'))
-    medal_won = db.Column(db.String(20))
 
 
 class OlympicYear(db.Model):
