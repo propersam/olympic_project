@@ -1,7 +1,7 @@
 from app import app, db
 
-from app.models import Admin, Athlete, Stadium, SportEvent, Country
-from app.models import AthleteSportEvent, StadiumSportEvent #, OlympicYear
+from app.models import Admin, Athlete, Stadium, Sport, Country
+from app.models import StadiumSportEvent # , AthleteSportEvent, OlympicYear
 
 @app.shell_context_processor
 def make_shell_context():
@@ -9,9 +9,9 @@ def make_shell_context():
     'Admin': Admin,
     'Athlete': Athlete,
     'Stadium': Stadium,
-    'SportEvent': SportEvent,
+    'Sport': Sport,
     'Country': Country,
-    'AthleteSportEvent': AthleteSportEvent,
+#    'AthleteSportEvent': AthleteSportEvent,
     'StadiumSportEvent': StadiumSportEvent,
 #    'OlympicYear': OlympicYear
     }

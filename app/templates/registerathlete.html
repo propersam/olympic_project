@@ -4,8 +4,9 @@
 
   <h3> Athlete Registeration Form </h3>
 
-    <form enctype="multipart/form-data" method="post" action="" novalidate>
+    <form method="post" action="" novalidate>
 
+      {{ form.hidden_tag() }}
 
         <div class="form-group row">
             {{ form.firstname.label(class="col-md-3 col-form-label") }}
@@ -57,7 +58,7 @@
 
         <div class="form-group row">
             {{ form.picture.label(class="col-md-3 col-form-label") }}
-            {{ form.picture(placeholder="Select File", class="col-md-9 form-control") }}
+            {{ form.picture(placeholder="Enter URL link to athlete Image", class="col-md-9 form-control") }}
             <br>{% for error in form.picture.errors %}
             <span style="color: red;"> [{{ error }}]</span>
             {% endfor %}

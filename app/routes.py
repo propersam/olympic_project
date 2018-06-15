@@ -1,13 +1,15 @@
 from flask import render_template, flash, redirect, request, url_for
 from datetime import datetime
 from app import app, db
+import os
 from werkzeug.urls import url_parse
+from werkzeug.utils import secure_filename
 from flask_login import current_user, login_user, logout_user
 from flask_login import login_required
 from app.forms import LoginForm, RegisterAthleteForm, RegisterCountryForm
 from app.forms import RegisterStadiumForm, RegisterSporteventForm
 from app.models import Admin, Athlete, Country, Stadium
-from app.models import SportEvent, StadiumSportEvent, AthleteSportEvent
+from app.models import Sport, StadiumSportEvent #, AthleteSportEvent
 # from app.models import OlympicYear
 
 
@@ -77,9 +79,9 @@ def admin_dashboard():
 @login_required
 def register_athlete():
 
-    form = RegisterAthleteForm()
-    form.country.choices = [(c.id, c.country_name) for c in Country.query.order_by('country_name').all()]
-    country = Country.query.all()
+    form = RegisterAthleteForm(formname="athleteDetails")
+    form.country.choices = [(c.id, c.country_name) for c in Country.query.all()]
+
     if form.validate_on_submit():
         athlete_firstname = form.firstname.data
         athlete_surname = form.surname.data
@@ -87,12 +89,28 @@ def register_athlete():
         athlete_date_of_birth = form.date_of_birth.data
         athlete_email = form.email.data
         athlete_country = form.country.data
-        athlete_image = form.picture.data
-        image_filename = secure_filename(athlete_image.filename)
-        athlete_image.save(os.path.join(
-        app.instance_path, 'photos', filename
-        ))
-        flash("Athlete data received successfully")
+        athlete_image_url = form.picture.data
+
+        athlete = Athlete(firstname=athlete_firstname,
+        surname = athlete_surname,
+        date_of_birth = athlete_date_of_birth,
+        gender = athlete_gender,
+        email = athlete_email,
+        country_id = athlete_country,
+        athlete_picture_url = athlete_image_url
+        )
+        db.session.add(athlete)
+        db.session.commit()
+
+
+        # Prepare image file name and path
+        # image_filename = secure_filename(athlete_image.filename)
+        # athlete_image.save(os.path.join(
+        # app.instance_path, 'photos', image_filename
+        # ))
+
+
+        flash("Athlete data received successfully", "success")
         return redirect(url_for('register_athlete'))
 
 
@@ -106,36 +124,63 @@ def register_athlete():
         )
 
 
-@app.route('/admin/registercountry',methods=['GET', 'POST'])
+@app.route('/admin/registercountry',methods=['GET','POST'])
 @login_required
 def register_country():
 
     form = RegisterCountryForm()
 
     if form.validate_on_submit():
-        country_name = form.country_name.data
-        country_location = form.country_geolocation.data
+        countryName = form.name.data or ''
+        countryLocation = form.geolocation.data or ''
+        countryClimate = form.climate.data or ''
+        countryContinent = form.geolocation.data or ''
+        countrySize = form.size.data or ''
+        countryPopulation = form.population.data or ''
+        countryStates = form.num_of_state.data or ''
+        countryPresident = form.president.data or ''
 
+        country = Country(country_name = countryName,
+         geolocation =countryLocation, climate=countryClimate,
+         continent=countryContinent, size = countrySize,
+         population=countryPopulation,
+         num_of_states=countryStates,
+         president=countryPresident
+         )
+        print(request.form)
+        print(country)
+        db.session.add(country)
+        db.session.commit()
 
-
-        flash("Country data received successfully")
+        flash("Country data received successfully", "success")
         return redirect(url_for('register_country'))
-
-
-    return render_template("registercountry.html",
-        title='Country Registeration| Admin section',
-        year = datetime.now().year,
-        form=form
-        )
+    else:
+        return render_template("registercountry.html",
+            title='Country Registeration| Admin section',
+            year = datetime.now().year,
+            form=form
+            )
 
 @app.route('/admin/registerstadium', methods=['GET','POST'])
 @login_required
 def register_stadium():
     form = RegisterStadiumForm()
+    form.stadium_country.choices = [(g.id, g.country_name) for g in Country.query.order_by('country_name').all()]
     if form.validate_on_submit():
+        stadiumName = form.stadium_name.data
+        stadiumCountry = form.stadium_country.data
+        stadiumLocation = form.stadium_location.data
+
+        stadium = Stadium(stadium_name=stadiumName,
+        country_id=stadiumCountry,
+        location = stadiumLocation
+        )
+        db.session.add(stadium)
+        db.session.commit()
 
 
-        print("Hello")
+        flash("Stadium Registered successfully", "success")
+
         return redirect(url_for('register_stadium'))
 
     return render_template("registerstadium.html",
@@ -149,8 +194,17 @@ def register_sport_event():
     form = RegisterSporteventForm()
     if form.validate_on_submit():
 
+        sportCategory = form.sport.data
+        sportEvent = form.event.data
 
-        print("Hello")
+        event = Sport(
+        sport_category = sportCategory,
+        sport_event = sportEvent
+        )
+        db.session.add(event)
+        db.session.commit()
+        flash("Sport Event Recorded Successfully")
+
         return redirect(url_for('register_sport_event'))
 
     return render_template("registerevent.html",

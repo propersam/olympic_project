@@ -8,74 +8,88 @@ from flask_login import UserMixin
 
 class Athlete(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    olympic_year = db.Column(db.DateTime, index=True, default=datetime.now().year)
-    firstname = db.Column(db.String(25), index=True)
-    surname = db.Column(db.String(25), index=True)
-    date_of_birth = db.Column(db.DateTime)
-    gender = db.Column(db.String(8))
-    email = db.Column(db.String(30), index=True, unique=True)
-    country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
-    # athlete_picture_url = db.Column(db.String(50))
-    athlete_sport_event = db.relationship('AthleteSportEvent', backref='athlete_sport_event', lazy='dynamic')
+    olympic_year = db.Column(db.Integer, index=True, default=datetime.utcnow().year)
+    firstname = db.Column(db.String(25), index=True, nullable=False)
+    surname = db.Column(db.String(25), index=True, nullable=False)
+    date_of_birth = db.Column(db.DateTime, nullable=False)
+    gender = db.Column(db.String(8), nullable=False)
+    email = db.Column(db.String(30), index=True, nullable=False,unique=True)
+    country_id = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=False)
+    athlete_picture_url = db.Column(db.String(128), nullable=True)
+    #athlete_sport_event = db.relationship('AthleteSportEvent', backref='athlete_sport_event', lazy='dynamic')
+    result = db.relationship('Result', backref='result', lazy='dynamic')
 
 
 class Country(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    olympic_year = db.Column(db.DateTime, index=True, default=datetime.now().year)
-    country_name = db.Column(db.String(30), index=True)
-    geolocation = db.Column(db.String(30))
-    climate = db.Column(db.String(20))
-    continent = db.Column(db.String(20))
-    size = db.Column(db.Integer)
-    population= db.Column(db.Integer)
-    num_of_states = db.Column(db.Integer)
+    olympic_year = db.Column(db.Integer, index=True,default=datetime.utcnow().year)
+    country_name = db.Column(db.String(30), index=True, nullable=False)
+    geolocation = db.Column(db.String(30), nullable=False)
+    climate = db.Column(db.String(20), nullable=False)
+    continent = db.Column(db.String(20), nullable=False)
+    size = db.Column(db.Integer, nullable=False)
+    population= db.Column(db.Integer, nullable=False)
+    num_of_states = db.Column(db.Integer, nullable=False)
+    president = db.Column(db.String(50), nullable=False)
     athlete = db.relationship('Athlete', backref='athlete', lazy='dynamic')
-    olympic_year = db.relationship('OlympicYear', backref='olympic_year', lazy='dynamic')
+    stadium = db.relationship('Stadium', backref='stadium', lazy='dynamic')
+    #   olympic_year = db.relationship('OlympicYear', backref='olympic_year', lazy='dynamic')
 
 
-class SportEvent(db.Model):
+class Sport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    olympic_year = db.Column(db.DateTime, index=True, default=datetime.now().year)
-    sport_event = db.Column(db.String(30), index=True)
-    sport_category = db.Column(db.String(30), index=True)
+    sport_category = db.Column(db.String(30), index=True, nullable=False)
+    sport_event = db.Column(db.String(30), index=True, nullable=False)
+    olympic_year = db.Column(db.Integer, index=True, default=datetime.utcnow().year)
     #athlete_sport_event = db.relationship('AthleteSportEvent', backref='athlete_sport_event', lazy='dynamic')
-    stadium_sport_event = db.relationship('StadiumSportEvent', backref='stadium_sport_event', lazy='dynamic')
+    # stadium_sport_event = db.relationship('StadiumSportEvent', backref='stadium_sport_event', lazy='dynamic')
 
 
 class Stadium(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    olympic_year = db.Column(db.DateTime, index=True, default=datetime.now().year)
-    stadium_name = db.Column(db.String(30), index=True)
-    location = db.Column(db.String(50))
+    stadium_name = db.Column(db.String(30), index=True, nullable=False)
+    country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
+    location = db.Column(db.String(50), nullable=False)
+    olympic_year = db.Column(db.Integer, index=True, default=datetime.utcnow().year)
     # stadium_picture_url = db.Column(db.String(30))
-    stadium_sport_event = db.relationship('StadiumSportEvent', backref='stadium_registered_event', lazy='dynamic')
+    stadium_sport_event = db.relationship('StadiumSportEvent', backref='stadium_sport_event', lazy='dynamic')
 
 
-class AthleteSportEvent(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    athlete_id = db.Column(db.Integer, db.ForeignKey('athlete.id'))
-    sport_event_id = db.Column(db.Integer,db.ForeignKey('sport_event.id'))
-    Date = db.Column(db.DateTime, index=True)
-    Position = db.Column(db.Integer)
+# class AthleteSportEvent(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     athlete_id = db.Column(db.Integer, db.ForeignKey('athlete.id'))
+#     sport_event_id = db.Column(db.Integer,db.ForeignKey('sport_event.id'))
 
 
 class StadiumSportEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    stadium_id = db.Column(db.Integer, db.ForeignKey('stadium.id'))
-    sport_event_id = db.Column(db.Integer, db.ForeignKey('sport_event.id'))
+    stadium_id = db.Column(db.Integer, db.ForeignKey('stadium.id'), nullable=False)
+    sport_event_id = db.Column(db.Integer, db.ForeignKey('sport.id'), nullable=False)
+
+
+class Result(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    olympic_year = db.Column(db.Integer, index=True, default=datetime.utcnow().year)
+    athlete_id = db.Column(db.Integer, db.ForeignKey('athlete.id'), nullable=False)
+    # there would be sport field
+    # In REsult form
+    # but that will just help determine dynamic event
+    stadium_id = db.Column(db.Integer, db.ForeignKey('stadium.id'), nullable=False)
+    sport_event_id = db.Column(db.Integer,db.ForeignKey('sport.id'), nullable=False)
+    position = db.Column(db.Integer, index=True, nullable=False)
 
 
 # class OlympicYear(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
-#     year = db.Column(db.DateTime, index=True, default=datetime.now().year)
+#     year = db.Column(db.DateTime, index=True, default=datetime.utcnow().year)
 #     participating_country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
 #     # mascot = db.Column(db.String(30), unique=True)
 
 
 class Admin(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True, index=True)
-    password_hash = db.Column(db.String(128))
+    username = db.Column(db.String(30), unique=True, index=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -85,7 +99,6 @@ class Admin(UserMixin, db.Model):
 
     def __repr(self):
         return '<User {}>'.format(self.username)
-
 
 
 @login.user_loader

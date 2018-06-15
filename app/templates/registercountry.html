@@ -5,19 +5,35 @@
     <h3> Country Registeration Form </h3>
     <form method="post" action="" novalidate>
 
+      <!-- {% for field_name in form.errors %}
+       {% for error in form.errors[field_name] %}
+            <li>{{ field_name }}: {{ error }}</li>
+        {% endfor %}
+        {% endfor %}-->
+        {{ form.hidden_tag() }}
+
+        <!-- {% for field in form if field.name != "csrf_token" %}
+        <div class="form-group row">
+          {{ field.label(class="col-md-3 col-from-label") }}</p>
+        <p>{{ field }}
+            {% for error in field.errors %}
+                {{ error }}
+            {% endfor %}
+        </p>
+    {% endfor %} -->
 
         <div class="form-group row">
-            {{ form.country_name.label(class="col-md-3 col-form-label") }}
-            {{ form.country_name(size=50,placeholder="Enter Name of Country", class="col-md-9 form-control") }}
-            <br>{% for error in form.country_name.errors %}
+            {{ form.name.label(class="col-md-3 col-form-label") }}
+            {{ form.name(size=50,placeholder="Enter Name of Country", class="col-md-9 form-control") }}
+            <br>{% for error in form.name.errors %}
             <span style="color: red;"> [{{ error }}]</span>
             {% endfor %}
         </div>
 
         <div class="form-group row">
-            {{ form.country_geolocation.label(class="col-md-3 col-form-label") }}
-            {{ form.country_geolocation(size=50,placeholder="Country Geographical location", class="col-md-9 form-control") }}
-            <br>{% for error in form.country_geolocation.errors %}
+            {{ form.geolocation.label(class="col-md-3 col-form-label") }}
+            {{ form.geolocation(size=50,placeholder="Country Geographical location", class="col-md-9 form-control") }}
+            <br>{% for error in form.geolocation.errors %}
             <span style="color: red;"> [{{ error }}]</span>
             {% endfor %}
         </div>
@@ -57,6 +73,14 @@
         </div>
 
         <div class="form-group row">
+            {{ form.president.label(class="col-md-3 col-form-label") }}
+            {{ form.president(placeholder="Enter Full Name of President", class="col-md-9 form-control") }}
+            <br>{% for error in form.president.errors %}
+            <span style="color: red;"> [{{ error }}]</span>
+            {% endfor %}
+        </div>
+
+        <div class="form-group row">
             {{ form.size.label(class="col-md-3 col-form-label") }}
             {{ form.size(placeholder="Enter Country Size in Sq. meters", class="col-md-9 form-control") }}
             <br>{% for error in form.size.errors %}
@@ -68,7 +92,8 @@
 
 
         <div>
-          {{ form.register_country(class="btn btn-primary") }}
+        {{ form.register_country(class="btn btn-primary") }}
+
         </div>
     </form>
 
